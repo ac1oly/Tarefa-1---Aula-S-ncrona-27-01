@@ -98,13 +98,13 @@ const bool NUMEROS[10][25] = {
      0, 0, 0, 0, 1,
      1, 1, 1, 1, 1}};
 
-// FunÃ§Ã£o para criar cores RGB com ajuste de brilho
+// Funcao para criar cores RGB com ajuste de brilho
 static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b, uint8_t brightness)
 {
     return ((uint32_t)(g * brightness / 255) << 8) | ((uint32_t)(r * brightness / 255) << 16) | (uint32_t)(b * brightness / 255);
 }
 
-// Mapeamento da ordem dos LEDs conforme a matriz fÃ­sica
+// Mapeamento da ordem dos LEDs conforme a matriz de LEDs
 const int led_map[25] = {
     24, 23, 22, 21, 20,
     15, 16, 17, 18, 19,
@@ -112,7 +112,7 @@ const int led_map[25] = {
     5, 6, 7, 8, 9,
     4, 3, 2, 1, 0};
 
-// Atualiza a exibiÃ§Ã£o do nÃºmero nos LEDs
+// Atualiza a exibicao dos numeros nos LEDs
 void update_display(int digit)
 {
     for (int i = 0; i < 25; i++)
@@ -127,7 +127,7 @@ void update_display(int digit)
     }
 }
 
-// Callback para debounce do botÃ£o
+// Callback para debounce do botao
 static int64_t debounce_callback(alarm_id_t id, void *user_data)
 {
     uint gpio = (uint)user_data;
@@ -147,7 +147,7 @@ static int64_t debounce_callback(alarm_id_t id, void *user_data)
     return 0;
 }
 
-// InterrupÃ§Ã£o do botÃ£o
+// interrupcao do botao
 void button_isr(uint gpio, uint32_t events)
 {
     gpio_set_irq_enabled(gpio, GPIO_IRQ_EDGE_FALL, false);
@@ -165,7 +165,7 @@ int main()
 {
     stdio_init_all();
 
-    // ConfiguraÃ§Ã£o dos LEDs RGB
+    // configuracao dos LEDs RGB
     gpio_init(LEDR);
     gpio_set_dir(LEDR, GPIO_OUT);
     gpio_init(LEDG);
@@ -173,7 +173,7 @@ int main()
     gpio_init(LEDB);
     gpio_set_dir(LEDB, GPIO_OUT);
 
-    // ConfiguraÃ§Ã£o dos botÃµes
+    // Configuracao dos botoes
     gpio_init(BUTTON_A);
     gpio_set_dir(BUTTON_A, GPIO_IN);
     gpio_pull_up(BUTTON_A);
@@ -185,11 +185,11 @@ int main()
     uint offset = pio_add_program(pio, &ws2812_program);
     ws2812_program_init(pio, sm, offset, OUT_PIN, 800000, false);
 
-    // ConfiguraÃ§Ã£o das interrupÃ§Ãµes dos botÃµes
+    // Configuracao das interrupcoes dos botoes
     gpio_set_irq_enabled_with_callback(BUTTON_A, GPIO_IRQ_EDGE_FALL, true, &button_isr);
     gpio_set_irq_enabled_with_callback(BUTTON_B, GPIO_IRQ_EDGE_FALL, true, &button_isr);
 
-    // ConfiguraÃ§Ã£o do timer para piscar LED
+    // configuracao do timer para piscar LED
     struct repeating_timer timer;
     add_repeating_timer_ms(100, blink_timer_callback, NULL, &timer);
 
